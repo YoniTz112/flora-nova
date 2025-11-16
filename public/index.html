@@ -351,7 +351,7 @@ async function sendOrder(){
   const order = { name, items, drinks, total };
 
   try {
-await fetch("/orders", {
+await fetch(window.location.origin + "/orders", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(order)
