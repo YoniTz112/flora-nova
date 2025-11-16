@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>תפריט המסעדה</title>
-
 <style>
 body {
   font-family: 'David Libre', Arial, sans-serif;
@@ -53,6 +52,12 @@ label {
   font-size: 1.1em;
 }
 
+.item label, .drink-container label {
+  font-size: 1.3em;
+  color: #00bfff;
+  font-weight: bold;
+}
+
 input[type="number"], input[type="text"] {
   padding: 5px;
   width: 60px;
@@ -82,7 +87,7 @@ button:hover {
   margin-bottom: 10px;
 }
 
-/* Botão do carrinho */
+/* Botão do carrinho fixo */
 #cartToggle {
   position: fixed;
   top: 50%;
@@ -90,12 +95,12 @@ button:hover {
   transform: translateY(-50%);
   background-color: #ff6600;
   color: white;
-  padding: 15px 20px;
+  padding: 10px 12px;
   cursor: pointer;
   border-radius: 5px 0 0 5px;
   z-index: 200;
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1em;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
@@ -107,7 +112,7 @@ button:hover {
   white-space: pre-line;
   position: fixed;
   top: 0;
-  right: -320px; /* escondido inicialmente */
+  right: -320px;
   width: 320px;
   height: 100%;
   box-shadow: -2px 0 6px rgba(0,0,0,0.2);
@@ -127,6 +132,13 @@ button:hover {
   font-size: 0.9em;
   border-radius: 3px;
   cursor: pointer;
+}
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 input[type="checkbox"] {
@@ -164,20 +176,20 @@ input[type="checkbox"] {
 }
 </style>
 </head>
-
 <body>
 
 <header>תפריט המטבח הישראלי בית חב״ד פלורה</header>
 
 <div class="container">
-
 <label for="customerName">שם:</label>
 <input type="text" id="customerName" placeholder="הכנס שם" required>
+<label for="customerSurname">שם משפחה:</label>
+<input type="text" id="customerSurname" placeholder="הכנס שם משפחה" required>
 
 <h2>מנות עיקריות</h2>
 
 <div class="item">
-  <label>שניצל בבגט – 70₪</label>
+  <label>שניצל בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
     <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
@@ -185,13 +197,13 @@ input[type="checkbox"] {
     <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
     <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
     <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="10"> צ’יפס בצד (+10₪)
+    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
   </div>
-  <button onclick="addToCart(this, 70, 'שניצל בבגט')">הוסף לעגלה</button>
+  <button onclick="addToCart(this, 60, 'שניצל בבגט')">הוסף לעגלה</button>
 </div>
 
 <div class="item">
-  <label>שווארמה בבגט – 70₪</label>
+  <label>שווארמה בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
     <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
@@ -199,13 +211,13 @@ input[type="checkbox"] {
     <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
     <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
     <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="10"> צ’יפס בצד (+10₪)
+    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
   </div>
-  <button onclick="addToCart(this, 70, 'שווארמה בבגט')">הוסף לעגלה</button>
+  <button onclick="addToCart(this, 60, 'שווארמה בבגט')">הוסף לעגלה</button>
 </div>
 
 <div class="item">
-  <label>חזה עוף בבגט – 70₪</label>
+  <label>חזה עוף בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
     <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
@@ -213,13 +225,13 @@ input[type="checkbox"] {
     <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
     <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
     <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="10"> צ’יפס בצד (+10₪)
+    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
   </div>
-  <button onclick="addToCart(this, 70, 'חזה עוף בבגט')">הוסף לעגלה</button>
+  <button onclick="addToCart(this, 60, 'חזה עוף בבגט')">הוסף לעגלה</button>
 </div>
 
 <div class="item">
-  <label>המבורגר – 60₪</label>
+  <label>המבורגר – 50₪</label>
   <div class="toppings">
     <label>תוספות:</label>
     <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
@@ -228,52 +240,51 @@ input[type="checkbox"] {
     <input type="checkbox" class="topping" data-name="עגבניה" data-price="0"> עגבניה
     <input type="checkbox" class="topping" data-name="בצל" data-price="0"> בצל
     <input type="checkbox" class="topping" data-name="חסה" data-price="0"> חסה
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="10"> צ’יפס בצד (+10₪)
+    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
     <input type="checkbox" class="topping" data-name="תוספת קציצה" data-price="10"> תוספת קציצה (+10₪)
   </div>
-  <button onclick="addToCart(this, 60, 'המבורגר')">הוסף לעגלה</button>
+  <button onclick="addToCart(this, 50, 'המבורגר')">הוסף לעגלה</button>
 </div>
 
-<h2>צ’יפס בצד – 10₪ (מנה נפרדת)</h2>
+<h2>צ’יפס בצד – 7₪ (מנה נפרדת)</h2>
 <div class="drink-container">
   <label>צ’יפס בצד</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="צ’יפס בצד" data-price="10">
+  <input type="number" min="0" value="0" class="drink-input" data-name="צ’יפס בצד" data-price="7">
   <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
 </div>
 
 <h2>שתייה – 7₪</h2>
-
 <div class="drink-container">
   <label>קוקה קולה</label>
   <input type="number" min="0" value="0" class="drink-input" data-name="קוקה קולה" data-price="7">
   <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
 </div>
-
 <div class="drink-container">
   <label>קולה זירו</label>
   <input type="number" min="0" value="0" class="drink-input" data-name="קולה זירו" data-price="7">
   <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
 </div>
-
 <div class="drink-container">
   <label>מים</label>
   <input type="number" min="0" value="0" class="drink-input" data-name="מים" data-price="7">
   <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
 </div>
-
 <div class="drink-container">
-  <label>מים מוגזים</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="מים מוגזים" data-price="7">
+  <label>סודה</label>
+  <input type="number" min="0" value="0" class="drink-input" data-name="סודה" data-price="7">
   <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
 </div>
-
 </div>
 
 <!-- Botão do carrinho -->
-<div id="cartToggle" onclick="toggleCart()">עגלה 🛒</div>
+<div id="cartToggle" onclick="toggleCart()">עגלת הקניות שלי 🛒</div>
 
 <!-- Carrinho lateral -->
 <div id="cart" class="cart">
+  <div class="cart-header">
+    <span>עגלת הקניות שלי</span>
+    <button onclick="toggleCart()">X</button>
+  </div>
   העגלה ריקה
   <button style="float:left;" onclick="sendOrder()">שלח הזמנה</button>
 </div>
@@ -283,6 +294,10 @@ input[type="checkbox"] {
   ההזמנה נשלחה בהצלחה!<br>
   אנא חזרו ל-WhatsApp כדי לאשר את ההזמנה.
   <button onclick="closeMessage()">סגור</button>
+  <br><br>
+  <a href="https://wa.me/972559508114" target="_blank">
+    <button>דבר עם המטבח הישראלי</button>
+  </a>
 </div>
 
 <script>
@@ -291,8 +306,7 @@ let cart = [];
 function addToCart(btn, price, name){
   const parent = btn.parentElement;
   const toppings = [...parent.querySelectorAll('.topping:checked')].map(t=>t.dataset.name);
-  const toppingsPrice = [...parent.querySelectorAll('.topping:checked')]
-        .reduce((sum,t)=>sum + parseInt(t.dataset.price),0);
+  const toppingsPrice = [...parent.querySelectorAll('.topping:checked')].reduce((sum,t)=>sum + parseInt(t.dataset.price),0);
   parent.querySelectorAll('.topping:checked').forEach(t=> t.checked = false);
   cart.push({ name, price, toppings, toppingsPrice, type:"food" });
   updateCart();
@@ -319,7 +333,7 @@ function removeFromCart(idx){
 function updateCart(){
   const cartDiv = document.getElementById("cart");
   if(cart.length === 0){
-    cartDiv.innerHTML = `העגלה ריקה <button style="float:left;" onclick="sendOrder()">שלח הזמנה</button>`;
+    cartDiv.innerHTML = '<div class="cart-header"><span>עגלת הקניות שלי</span><button onclick="toggleCart()">X</button></div>העגלה ריקה<button style="float:left;" onclick="sendOrder()">שלח הזמנה</button>';
     return;
   }
 
@@ -329,11 +343,11 @@ function updateCart(){
 
   const total = cart.reduce((sum,item)=>sum + item.price + item.toppingsPrice, 0);
 
-  cartDiv.innerHTML = itemsHtml + 
+  cartDiv.innerHTML = `<div class="cart-header"><span>עגלת הקניות שלי</span><button onclick="toggleCart()">X</button></div>` +
+    itemsHtml + 
     `<p style="font-weight:bold; margin-top:10px;">סה"כ: ₪${total}</p>` +
     `<button style="float:left;" onclick="sendOrder()">שלח הזמנה</button>`;
 }
-
 
 function toggleCart(){
   document.getElementById('cart').classList.toggle('open');
@@ -341,29 +355,26 @@ function toggleCart(){
 
 async function sendOrder(){
   const name = document.getElementById('customerName').value.trim();
-  if(!name){ alert("אנא הכנס שם"); return; }
+  const surname = document.getElementById('customerSurname').value.trim();
+  if(!name || !surname){ alert("אנא הכנס שם ושם משפחה"); return; }
   if(cart.length < 1){ alert("יש לבחור לפחות מנה אחת"); return; }
 
   const items = cart.filter(i => i.type === 'food');
   const drinks = cart.filter(i => i.type === 'drink');
-  const total = items.reduce((sum,i)=>sum+i.price+i.toppingsPrice,0)
-              + drinks.reduce((sum,i)=>sum+i.price,0);
-  const order = { name, items, drinks, total };
+  const total = items.reduce((sum,i)=>sum+i.price+i.toppingsPrice,0) + drinks.reduce((sum,i)=>sum+i.price,0);
+  const order = { name, surname, items, drinks, total };
 
   try {
-await fetch("/orders", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(order)
-});
-
+    await fetch("/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order)
+    });
     cart = [];
     updateCart();
     document.getElementById('customerName').value = '';
-
-    // Mostra mensagem grande APENAS após clicar em enviar
+    document.getElementById('customerSurname').value = '';
     document.getElementById('orderMessage').style.display = 'flex';
-
   } catch(err){
     alert("Erro ao enviar o pedido! Verifique se o servidor está rodando.");
     console.log(err);
