@@ -351,11 +351,11 @@ async function sendOrder(){
   const order = { name, items, drinks, total };
 
   try {
-    await fetch("http://localhost:3000/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order)
-    });
+await fetch("/orders", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(order)
+});
 
     cart = [];
     updateCart();
