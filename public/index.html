@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>תפריט המסעדה</title>
+
 <style>
 body {
   font-family: 'David Libre', Arial, sans-serif;
@@ -46,12 +47,6 @@ h2 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 1.1em;
-}
-
 .item label, .drink-container label {
   font-size: 1.3em;
   color: #00bfff;
@@ -82,29 +77,60 @@ button:hover {
   background-color: #e6b800;
 }
 
+/* Toppings */
 .toppings {
   margin-top: 5px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* Botão do carrinho fixo */
+.toppings label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toppings input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #1e90ff;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toppings input[type="checkbox"]:checked {
+  background-color: #1e90ff;
+  color: white;
+}
+
+.toppings input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 14px;
+}
+
+/* Cart */
 #cartToggle {
   position: fixed;
   top: 50%;
-  right: 0;
+  left: 0;
+  border-radius: 0 5px 5px 0;
   transform: translateY(-50%);
   background-color: #ff6600;
   color: white;
   padding: 10px 12px;
   cursor: pointer;
-  border-radius: 5px 0 0 5px;
   z-index: 200;
   font-weight: bold;
   font-size: 1em;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-/* Carrinho lateral */
 .cart {
   background-color: #f8f1d1;
   padding: 10px;
@@ -112,17 +138,17 @@ button:hover {
   white-space: pre-line;
   position: fixed;
   top: 0;
-  right: -320px;
+  left: -320px;
   width: 320px;
   height: 100%;
   box-shadow: -2px 0 6px rgba(0,0,0,0.2);
-  transition: right 0.3s ease;
+  transition: left 0.3s ease;
   z-index: 150;
   overflow-y: auto;
 }
 
 .cart.open {
-  right: 0;
+  left: 0;
 }
 
 .cart-item button {
@@ -134,18 +160,7 @@ button:hover {
   cursor: pointer;
 }
 
-.cart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-input[type="checkbox"] {
-  margin-left: 5px;
-}
-
-/* Aviso após envio */
+/* Order message */
 #orderMessage {
   display:none;
   position:fixed;
@@ -176,72 +191,79 @@ input[type="checkbox"] {
 }
 </style>
 </head>
+
 <body>
 
 <header>תפריט המטבח הישראלי בית חב״ד פלורה</header>
 
 <div class="container">
-<label for="customerName">שם:</label>
+
+<label>שם:</label>
 <input type="text" id="customerName" placeholder="הכנס שם" required>
-<label for="customerSurname">שם משפחה:</label>
+
+<label>שם משפחה:</label>
 <input type="text" id="customerSurname" placeholder="הכנס שם משפחה" required>
 
 <h2>מנות עיקריות</h2>
 
+<!-- Schnitzel -->
 <div class="item">
   <label>שניצל בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
-    <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
-    <input type="checkbox" class="topping" data-name="חריף" data-price="0"> חריף
-    <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
-    <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
-    <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
+    <label><input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס</label>
+    <label><input type="checkbox" class="topping" data-name="חריף" data-price="0"> חריף</label>
+    <label><input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול</label>
+    <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'שניצל בבגט')">הוסף לעגלה</button>
 </div>
 
+<!-- Shawarma -->
 <div class="item">
   <label>שווארמה בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
-    <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
-    <input type="checkbox" class="topping" data-name="חריף" data-price="0"> חריף
-    <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
-    <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
-    <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
+    <label><input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס</label>
+    <label><input type="checkbox" class="topping" data-name="חריף" data-price="0"> חריף</label>
+    <label><input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול</label>
+    <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'שווארמה בבגט')">הוסף לעגלה</button>
 </div>
 
+<!-- Chicken -->
 <div class="item">
   <label>חזה עוף בבגט – 60₪</label>
   <div class="toppings">
     <label>תוספות:</label>
-    <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
-    <input type="checkbox" class="topping" data-name="חריף" data-price="0"> חריף
-    <input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי
-    <input type="checkbox" class="topping" data-name="כרוב ירוק" data-price="0"> כרוב ירוק
-    <input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
+    <label><input type="checkbox" class="topping" data-name="חומוס"> חומוס</label>
+    <label><input type="checkbox" class="topping" data-name="חריף"> חריף</label>
+    <label><input type="checkbox" class="topping" data-name="סלט ישראלי"> סלט ישראלי</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב ירוק"> כרוב ירוק</label>
+    <label><input type="checkbox" class="topping" data-name="כרוב סגול"> כרוב סגול</label>
+    <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'חזה עוף בבגט')">הוסף לעגלה</button>
 </div>
 
+<!-- Burger -->
 <div class="item">
   <label>המבורגר – 50₪</label>
   <div class="toppings">
     <label>תוספות:</label>
-    <input type="checkbox" class="topping" data-name="חומוס" data-price="0"> חומוס
-    <input type="checkbox" class="topping" data-name="מיונז" data-price="0"> מיונז
-    <input type="checkbox" class="topping" data-name="קטשופ" data-price="0"> קטשופ
-    <input type="checkbox" class="topping" data-name="עגבניה" data-price="0"> עגבניה
-    <input type="checkbox" class="topping" data-name="בצל" data-price="0"> בצל
-    <input type="checkbox" class="topping" data-name="חסה" data-price="0"> חסה
-    <input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)
-    <input type="checkbox" class="topping" data-name="תוספת קציצה" data-price="10"> תוספת קציצה (+10₪)
+    <label><input type="checkbox" class="topping" data-name="חומוס"> חומוס</label>
+    <label><input type="checkbox" class="topping" data-name="מיונז"> מיונז</label>
+    <label><input type="checkbox" class="topping" data-name="קטשופ"> קטשופ</label>
+    <label><input type="checkbox" class="topping" data-name="עגבניה"> עגבניה</label>
+    <label><input type="checkbox" class="topping" data-name="בצל"> בצל</label>
+    <label><input type="checkbox" class="topping" data-name="חסה"> חסה</label>
+    <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד +7₪</label>
+    <label><input type="checkbox" class="topping" data-name="תוספת קציצה" data-price="10"> תוספת קציצה +10₪</label>
   </div>
   <button onclick="addToCart(this, 50, 'המבורגר')">הוסף לעגלה</button>
 </div>
@@ -249,37 +271,81 @@ input[type="checkbox"] {
 <h2>צ’יפס בצד – 7₪ (מנה נפרדת)</h2>
 <div class="drink-container">
   <label>צ’יפס בצד</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="צ’יפס בצד" data-price="7">
-  <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
+  <div class="qty-control">
+    <button onclick="changeQty(this, -1)">-</button>
+    <span>0</span>
+    <button onclick="changeQty(this, 1)">+</button>
+  </div>
+  <button onclick="addQtyToCart('צ’יפס בצד', 7, this)">הוסף לעגלה</button>
 </div>
 
 <h2>שתייה – 7₪</h2>
+
 <div class="drink-container">
   <label>קוקה קולה</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="קוקה קולה" data-price="7">
-  <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
+  <div class="qty-control">
+    <button onclick="changeQty(this, -1)">-</button>
+    <span>0</span>
+    <button onclick="changeQty(this, 1)">+</button>
+  </div>
+  <button onclick="addQtyToCart('קוקה קולה', 7, this)">הוסף לעגלה</button>
 </div>
+
 <div class="drink-container">
   <label>קולה זירו</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="קולה זירו" data-price="7">
-  <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
+  <div class="qty-control">
+    <button onclick="changeQty(this, -1)">-</button>
+    <span>0</span>
+    <button onclick="changeQty(this, 1)">+</button>
+  </div>
+  <button onclick="addQtyToCart('קולה זירו', 7, this)">הוסף לעגלה</button>
 </div>
+
 <div class="drink-container">
   <label>מים</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="מים" data-price="7">
-  <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
+  <div class="qty-control">
+    <button onclick="changeQty(this, -1)">-</button>
+    <span>0</span>
+    <button onclick="changeQty(this, 1)">+</button>
+  </div>
+  <button onclick="addQtyToCart('מים', 7, this)">הוסף לעגלה</button>
 </div>
+
 <div class="drink-container">
   <label>סודה</label>
-  <input type="number" min="0" value="0" class="drink-input" data-name="סודה" data-price="7">
-  <button onclick="addItemFromInput(this)">הוסף לעגלה</button>
-</div>
+  <div class="qty-control">
+    <button onclick="changeQty(this, -1)">-</button>
+    <span>0</span>
+    <button onclick="changeQty(this, 1)">+</button>
+  </div>
+  <button onclick="addQtyToCart('סודה', 7, this)">הוסף לעגלה</button>
 </div>
 
-<!-- Botão do carrinho -->
-<div id="cartToggle" onclick="toggleCart()">עגלת הקניות שלי 🛒</div>
+<script>
+function changeQty(btn, delta){
+  const span = btn.parentElement.querySelector('span');
+  let qty = parseInt(span.textContent);
+  qty += delta;
+  if(qty < 0) qty = 0;
+  span.textContent = qty;
+}
 
-<!-- Carrinho lateral -->
+function addQtyToCart(name, price, btn){
+  const container = btn.parentElement;
+  const qty = parseInt(container.querySelector('span').textContent);
+  if(qty < 1) return;
+  for(let i = 0; i < qty; i++){
+    cart.push({ name, price, toppings: [], toppingsPrice: 0, type: "drink" });
+  }
+  container.querySelector('span').textContent = 0;
+  updateCart();
+}
+</script>
+
+<!-- Cart button -->
+<div id="cartToggle" onclick="toggleCart()">עגלה שלי 🛒</div>
+
+<!-- Cart panel -->
 <div id="cart" class="cart">
   <div class="cart-header">
     <span>עגלת הקניות שלי</span>
@@ -289,7 +355,7 @@ input[type="checkbox"] {
   <button style="float:left;" onclick="sendOrder()">שלח הזמנה</button>
 </div>
 
-<!-- Aviso após envio -->
+<!-- Order message -->
 <div id="orderMessage">
   ההזמנה נשלחה בהצלחה!<br>
   אנא חזרו ל-WhatsApp כדי לאשר את ההזמנה.
@@ -306,7 +372,7 @@ let cart = [];
 function addToCart(btn, price, name){
   const parent = btn.parentElement;
   const toppings = [...parent.querySelectorAll('.topping:checked')].map(t=>t.dataset.name);
-  const toppingsPrice = [...parent.querySelectorAll('.topping:checked')].reduce((sum,t)=>sum + parseInt(t.dataset.price),0);
+  const toppingsPrice = [...parent.querySelectorAll('.topping:checked')].reduce((sum,t)=>sum + parseInt(t.dataset.price || 0),0);
   parent.querySelectorAll('.topping:checked').forEach(t=> t.checked = false);
   cart.push({ name, price, toppings, toppingsPrice, type:"food" });
   updateCart();
@@ -377,7 +443,6 @@ async function sendOrder(){
     document.getElementById('orderMessage').style.display = 'flex';
   } catch(err){
     alert("Erro ao enviar o pedido! Verifique se o servidor está rodando.");
-    console.log(err);
   }
 }
 

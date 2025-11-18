@@ -86,9 +86,10 @@ function renderOrders(orders){
     const div = document.createElement("div");
     div.className = "order";
 
-    let html = `
-      <h3>${order.name} - ₪${order.total}</h3>
-    `;
+let html = `
+  <h3>${order.name} ${order.surname} - ₪${order.total}</h3>
+`;
+
 
     if(order.items.length > 0){
       html += "<strong>מנות:</strong><ul>";
