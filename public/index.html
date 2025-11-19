@@ -65,12 +65,13 @@ input[type="number"], input[type="text"] {
 button {
   background-color: #ffcc00;
   border: none;
-  padding: 7px 12px;
-  font-size: 1em;
+  padding: 12px 20px; /* AUMENTA O TAMANHO */
+  font-size: 1.2em;   /* AUMENTA O TEXTO */
   cursor: pointer;
-  margin-top: 5px;
-  border-radius: 5px;
+  margin-top: 10px;
+  border-radius: 10px;
   transition: 0.3s;
+  font-weight: bold;
 }
 
 button:hover {
@@ -219,6 +220,7 @@ button:hover {
     <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'שניצל בבגט')">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <!-- Shawarma -->
@@ -234,6 +236,7 @@ button:hover {
     <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'שווארמה בבגט')">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <!-- Chicken -->
@@ -249,6 +252,7 @@ button:hover {
     <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
   </div>
   <button onclick="addToCart(this, 60, 'חזה עוף בבגט')">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <!-- Burger -->
@@ -266,6 +270,7 @@ button:hover {
     <label><input type="checkbox" class="topping" data-name="תוספת קציצה" data-price="10"> תוספת קציצה +10₪</label>
   </div>
   <button onclick="addToCart(this, 50, 'המבורגר')">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <h2>צ’יפס בצד – 7₪ (מנה נפרדת)</h2>
@@ -277,6 +282,7 @@ button:hover {
     <button onclick="changeQty(this, 1)">+</button>
   </div>
   <button onclick="addQtyToCart('צ’יפס בצד', 7, this)">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <h2>שתייה – 7₪</h2>
@@ -289,6 +295,7 @@ button:hover {
     <button onclick="changeQty(this, 1)">+</button>
   </div>
   <button onclick="addQtyToCart('קוקה קולה', 7, this)">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <div class="drink-container">
@@ -299,6 +306,7 @@ button:hover {
     <button onclick="changeQty(this, 1)">+</button>
   </div>
   <button onclick="addQtyToCart('קולה זירו', 7, this)">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <div class="drink-container">
@@ -309,6 +317,7 @@ button:hover {
     <button onclick="changeQty(this, 1)">+</button>
   </div>
   <button onclick="addQtyToCart('מים', 7, this)">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <div class="drink-container">
@@ -319,6 +328,7 @@ button:hover {
     <button onclick="changeQty(this, 1)">+</button>
   </div>
   <button onclick="addQtyToCart('סודה', 7, this)">הוסף לעגלה</button>
+  <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח להוסיף לעגלה</p>
 </div>
 
 <script>
