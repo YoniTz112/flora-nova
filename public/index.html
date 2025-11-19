@@ -190,8 +190,30 @@ button:hover {
   border-radius:5px;
   color:#000;
 }
+
+/* Popup de item adicionado */
+.added-popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 500;
+}
+.added-popup.show {
+  opacity: 1;
+}
 </style>
 </head>
+
+<div id="addedPopup" class="added-popup">נוסף לעגלה ✔</div>
 
 <body>
 
@@ -340,16 +362,25 @@ function changeQty(btn, delta){
   span.textContent = qty;
 }
 
-function addQtyToCart(name, price, btn){
-  const container = btn.parentElement;
-  const qty = parseInt(container.querySelector('span').textContent);
-  if(qty < 1) return;
-  for(let i = 0; i < qty; i++){
-    cart.push({ name, price, toppings: [], toppingsPrice: 0, type: "drink" });
-  }
-  container.querySelector('span').textContent = 0;
+function addToCart(btn, price, name){
+  const parent = btn.parentElement;
+  const toppings = [...parent.querySelectorAll('.topping:checked')].map(t=>t.dataset.name);
+  const toppingsPrice = [...parent.querySelectorAll('.topping:checked')].reduce((sum,t)=>sum + parseInt(t.dataset.price || 0),0);
+  parent.querySelectorAll('.topping:checked').forEach(t=> t.checked = false);
+  cart.push({ name, price, toppings, toppingsPrice, type:"food" });
   updateCart();
+
+  showAddedPopup();
 }
+function showAddedPopup(){
+  const popup = document.getElementById("addedPopup");
+  popup.classList.add("show");
+
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 2000);
+}
+
 </script>
 
 <!-- Cart button -->
@@ -386,6 +417,8 @@ function addToCart(btn, price, name){
   parent.querySelectorAll('.topping:checked').forEach(t=> t.checked = false);
   cart.push({ name, price, toppings, toppingsPrice, type:"food" });
   updateCart();
+
+  showAddedPopup();
 }
 
 function addItemFromInput(btn){
