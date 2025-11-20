@@ -65,14 +65,19 @@
 
 <div id="ordersContainer"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Div oculta para gerar relatório -->
+<div id="report" style="display:none;">
+  <h1 style="text-align:center;">Relatório Diário de Pedidos</h1>
+  <div id="reportContent"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 async function fetchOrders(){
   try {
     const res = await fetch("/orders");
     if (!res.ok) throw new Error("Erro ao buscar pedidos");
-
     const orders = await res.json();
     renderOrders(orders);
   } catch (err) {
@@ -94,9 +99,7 @@ function renderOrders(orders){
     const div = document.createElement("div");
     div.className = "order";
 
-    let html = `
-      <h3>${order.name} ${order.surname} - ₪${order.total}</h3>
-    `;
+    let html = `<h3>${order.name} ${order.surname} - ₪${order.total}</h3>`;
 
     if(order.items.length > 0){
       html += "<strong>מנות:</strong><ul>";
@@ -125,10 +128,7 @@ async function removeOrder(idx){
   if (!confirm("Tem certeza que quer apagar este pedido?")) return;
 
   try {
-    const res = await fetch(`/orders/${idx}`, {
-      method: "DELETE"
-    });
-
+    const res = await fetch(`/orders/${idx}`, { method: "DELETE" });
     if (res.ok) fetchOrders();
     else alert("Erro ao apagar pedido");
   } catch(err){
@@ -141,10 +141,7 @@ document.getElementById("clearAll").addEventListener("click", async ()=>{
   if (!confirm("Tem certeza que quer apagar todos os pedidos?")) return;
 
   try {
-    const res = await fetch("/orders", {
-      method: "DELETE"
-    });
-
+    const res = await fetch("/orders", { method: "DELETE" });
     if (res.ok) fetchOrders();
     else alert("Erro ao apagar pedidos");
   } catch(err){
@@ -182,24 +179,30 @@ document.getElementById("generateReport").addEventListener("click", async () => 
       });
     });
 
-    // Criar PDF
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    // Criar HTML do relatório
+    const reportContent = document.getElementById("reportContent");
+    reportContent.innerHTML = "";
 
-    doc.setFontSize(18);
-    doc.text("Relatório Diário de Pedidos", 105, 20, null, null, "center");
-    
-    doc.setFontSize(12);
-    let y = 35;
+    const ul = document.createElement("ul");
     for (const [name, data] of Object.entries(summary)) {
-      doc.text(`${name}: ${data.qty} pedidos - ₪${data.revenue.toFixed(2)}`, 20, y);
-      y += 10;
+      const li = document.createElement("li");
+      li.textContent = `${name}: ${data.qty} pedidos - ₪${data.revenue.toFixed(2)}`;
+      ul.appendChild(li);
     }
+    reportContent.appendChild(ul);
 
-    doc.text(`Total de pedidos: ${orders.length}`, 20, y + 10);
-    doc.text(`Lucro total: ₪${totalRevenue.toFixed(2)}`, 20, y + 20);
+    const totalP = document.createElement("p");
+    totalP.textContent = `Total de pedidos: ${orders.length}`;
+    reportContent.appendChild(totalP);
 
-    doc.save(`Relatorio_${new Date().toLocaleDateString()}.pdf`);
+    const lucroP = document.createElement("p");
+    lucroP.textContent = `Lucro total: ₪${totalRevenue.toFixed(2)}`;
+    reportContent.appendChild(lucroP);
+
+    // Gerar PDF
+    const element = document.getElementById("report");
+    html2pdf().from(element).save(`Relatorio_${new Date().toLocaleDateString()}.pdf`);
+
   } catch (err) {
     console.error(err);
     alert("Erro ao gerar relatório");
