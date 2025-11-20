@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedidos</title>
+  <title>Pedidos Profissionais</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=David+Libre&family=Alef&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
       padding: 20px;
       color: #333;
     }
-    h1 {
+    h1, h2 {
       color: #1e90ff;
       text-align: center;
     }
@@ -54,9 +54,28 @@
       background-color: #1e90ff;
       color: white;
     }
-    /* Fonte hebraico no relatório */
+
+    /* Relatório */
     #report {
       font-family: 'Alef', sans-serif;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #1e90ff;
+      color: white;
+    }
+    .summary-table th {
+      background-color: #ffcc00;
+      color: #333;
     }
   </style>
 </head>
@@ -69,9 +88,9 @@
 
 <div id="ordersContainer"></div>
 
-<!-- Div para relatório (oculta por padrão) -->
-<div id="report" style="display:none;">
-  <h1 style="text-align:center;">Relatório Diário de Pedidos</h1>
+<!-- Relatório (oculto) -->
+<div id="report" style="display:none; padding:20px;">
+  <h1>Relatório Diário de Pedidos</h1>
   <div id="reportContent"></div>
 </div>
 
@@ -102,10 +121,10 @@ function renderOrders(orders){
     const div = document.createElement("div");
     div.className = "order";
 
-    let html = `<h3>${order.name} ${order.surname} - ₪${order.total}</h3>`;
+    let html = `<h3>${order.name} ${order.surname} - ₪${order.total} - ${new Date(order.time).toLocaleString()}</h3>`;
 
     if(order.items.length > 0){
-      html += "<strong>מנות:</strong><ul>";
+      html += "<strong>Itens:</strong><ul>";
       order.items.forEach(item => {
         html += `<li>${item.name}${item.toppings?.length ? " ("+item.toppings.join(", ")+")" : ""} - ₪${item.price + (item.toppingsPrice || 0)}</li>`;
       });
@@ -113,7 +132,7 @@ function renderOrders(orders){
     }
 
     if(order.drinks.length > 0){
-      html += "<strong>שתייה:</strong><ul>";
+      html += "<strong>Drinks:</strong><ul>";
       order.drinks.forEach(drink => {
         html += `<li>${drink.name} - ₪${drink.price}</li>`;
       });
@@ -121,18 +140,16 @@ function renderOrders(orders){
     }
 
     html += `<button onclick="removeOrder(${idx})">Apagar pedido</button>`;
-
     div.innerHTML = html;
     container.appendChild(div);
   });
 }
 
 async function removeOrder(idx){
-  if (!confirm("Tem certeza que quer apagar este pedido?")) return;
+  if(!confirm("Tem certeza que quer apagar este pedido?")) return;
   try {
     const res = await fetch(`/orders/${idx}`, { method: "DELETE" });
-    if (res.ok) fetchOrders();
-    else alert("Erro ao apagar pedido");
+    if(res.ok) fetchOrders();
   } catch(err){
     alert("Erro ao conectar com o servidor");
     console.error(err);
@@ -140,11 +157,10 @@ async function removeOrder(idx){
 }
 
 document.getElementById("clearAll").addEventListener("click", async ()=>{
-  if (!confirm("Tem certeza que quer apagar todos os pedidos?")) return;
+  if(!confirm("Tem certeza que quer apagar todos os pedidos?")) return;
   try {
     const res = await fetch("/orders", { method: "DELETE" });
-    if (res.ok) fetchOrders();
-    else alert("Erro ao apagar pedidos");
+    if(res.ok) fetchOrders();
   } catch(err){
     alert("Erro ao conectar com o servidor");
     console.error(err);
@@ -152,60 +168,110 @@ document.getElementById("clearAll").addEventListener("click", async ()=>{
 });
 
 document.getElementById("refresh").addEventListener("click", fetchOrders);
-
-// Carrega pedidos ao abrir a página
 fetchOrders();
 
-// ---------------- Relatório PDF ----------------
-document.getElementById("generateReport").addEventListener("click", async () => {
+// ---------------- Relatório Profissional ----------------
+document.getElementById("generateReport").addEventListener("click", async ()=>{
   try {
     const res = await fetch("/orders");
-    if (!res.ok) throw new Error("Erro ao buscar pedidos");
+    if(!res.ok) throw new Error("Erro ao buscar pedidos");
     const orders = await res.json();
 
-    if (orders.length === 0) {
+    if(orders.length === 0){
       alert("Nenhum pedido para gerar relatório");
       return;
     }
 
-    const summary = {};
-    let totalRevenue = 0;
-    orders.forEach(order => {
-      totalRevenue += order.total;
-      order.items.forEach(item => {
-        if (!summary[item.name]) summary[item.name] = { qty: 0, revenue: 0 };
-        summary[item.name].qty += 1;
-        summary[item.name].revenue += item.price + (item.toppingsPrice || 0);
-      });
-    });
-
     const reportContent = document.getElementById("reportContent");
     reportContent.innerHTML = "";
 
-    const ul = document.createElement("ul");
-    for (const [name, data] of Object.entries(summary)) {
-      const li = document.createElement("li");
-      li.textContent = `${name}: ${data.qty} pedidos - ₪${data.revenue.toFixed(2)}`;
-      ul.appendChild(li);
-    }
-    reportContent.appendChild(ul);
+    // Tabela detalhada de pedidos
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Cliente</th>
+        <th>Itens</th>
+        <th>Toppings</th>
+        <th>Drinks</th>
+        <th>Preço Pedido (₪)</th>
+        <th>Hora do Pedido</th>
+      </tr>
+    `;
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
 
+    let totalRevenue = 0;
+    const itemSummary = {};
+
+    orders.forEach(order=>{
+      totalRevenue += order.total;
+
+      order.items.forEach(item=>{
+        if(!itemSummary[item.name]) itemSummary[item.name] = { qty:0, revenue:0 };
+        itemSummary[item.name].qty += 1;
+        itemSummary[item.name].revenue += item.price + (item.toppingsPrice || 0);
+      });
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${order.name} ${order.surname}</td>
+        <td>${order.items.map(i=>i.name).join(", ")}</td>
+        <td>${order.items.map(i=>i.toppings?.join(", ")||"-").join("; ")}</td>
+        <td>${order.drinks.map(d=>d.name).join(", ")||"-"}</td>
+        <td>${order.total.toFixed(2)}</td>
+        <td>${new Date(order.time).toLocaleString()}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    reportContent.appendChild(table);
+
+    // Resumo de itens para pesquisa
+    const summaryTitle = document.createElement("h2");
+    summaryTitle.textContent = "Resumo de Itens (Pesquisa)";
+    reportContent.appendChild(summaryTitle);
+
+    const summaryTable = document.createElement("table");
+    summaryTable.className = "summary-table";
+    const summaryHead = document.createElement("thead");
+    summaryHead.innerHTML = `
+      <tr>
+        <th>Item</th>
+        <th>Quantidade</th>
+        <th>Receita (₪)</th>
+      </tr>
+    `;
+    summaryTable.appendChild(summaryHead);
+
+    const summaryBody = document.createElement("tbody");
+    for(const [item, data] of Object.entries(itemSummary)){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${item}</td><td>${data.qty}</td><td>${data.revenue.toFixed(2)}</td>`;
+      summaryBody.appendChild(tr);
+    }
+    summaryTable.appendChild(summaryBody);
+    reportContent.appendChild(summaryTable);
+
+    // Totais gerais
     const totalP = document.createElement("p");
     totalP.textContent = `Total de pedidos: ${orders.length}`;
+    totalP.style.fontWeight="bold";
     reportContent.appendChild(totalP);
 
     const lucroP = document.createElement("p");
     lucroP.textContent = `Lucro total: ₪${totalRevenue.toFixed(2)}`;
+    lucroP.style.fontWeight="bold";
     reportContent.appendChild(lucroP);
 
-    // Mostrar temporariamente o div antes de gerar PDF
+    // Gerar PDF
     const element = document.getElementById("report");
-    element.style.display = "block";
-    html2pdf().from(element).save(`Relatorio_${new Date().toLocaleDateString()}.pdf`).then(() => {
-      element.style.display = "none";
+    element.style.display="block";
+    html2pdf().from(element).save(`Relatorio_${new Date().toLocaleDateString()}.pdf`).then(()=>{
+      element.style.display="none";
     });
 
-  } catch (err) {
+  } catch(err){
     console.error(err);
     alert("Erro ao gerar relatório");
   }
