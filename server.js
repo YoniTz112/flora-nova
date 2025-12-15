@@ -14,7 +14,7 @@ const translateMap = {
   "עגבניה": "Tomate",
   "בצל": "Cebola",
   "חסה": "Alface",
-  "חתוספת קציצה": "Mais uma carne",
+  "תוספת קציצה": "Mais uma carne",
 
   // bebidas
   "קוקה קולה": "Coca",
