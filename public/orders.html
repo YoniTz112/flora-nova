@@ -360,22 +360,19 @@ ITENS:
           }
         });
       }
-
-      text += `
--------------------------------
-TOTAL: ₪${order.total}
-================================
-`;
+;
 
       const win = window.open("", "_blank");
       win.document.write(`
-        <pre style="
-          font-family: monospace;
-          font-size: 16px;
-          width: 280px;
-          direction: ltr;
-        ">${text}</pre>
-      `);
+  <pre style="
+    font-family: monospace;
+    font-size: 26px;
+    font-weight: bold;
+    width: 280px;
+    direction: ltr;
+  ">${text}</pre>
+`);
+
       win.document.close();
       win.focus();
       win.print();
