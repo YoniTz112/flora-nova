@@ -118,6 +118,10 @@ app.post("/orders", (req, res) => {
   res.json({ message: "Pedido recebido!" });
 });
 
+// GET pedidos (para orders.html)
+app.get("/orders", (req, res) => {
+  res.json(orders);
+});
 // -------------------- FRONT-END --------------------
 // Cria um diretório 'public' e salva os arquivos HTML dentro dele
 app.use(express.static(path.join(__dirname, "public")));
