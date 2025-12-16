@@ -258,6 +258,18 @@ button:hover {
   box-shadow: 0 0 12px rgba(30,144,255,0.5);
   outline: none;
 }
+
+.latin-warning {
+  color: red;
+  font-weight: bold;
+  font-size: 0.95em;
+  margin-top: 5px;
+  display: block;
+}
+
+.latin-only {
+  direction: ltr; /* inglês */
+}
 </style>
 </head>
 
@@ -270,10 +282,16 @@ button:hover {
 <div class="container">
 
 <label for="customerName" class="input-label">שם:</label>
-<input type="text" id="customerName" placeholder="הכנס שם" required class="styled-input">
+<input type="text" id="customerName" placeholder="שם:" required class="styled-input latin-only">
+<small class="latin-warning">
+ יש למלא את השם באותיות אנגליות בלבד (A-Z)
+</small>
 
 <label for="customerSurname" class="input-label">שם משפחה:</label>
-<input type="text" id="customerSurname" placeholder="הכנס שם משפחה" required class="styled-input">
+<input type="text" id="customerSurname" placeholder="שם משפחה:" required class="styled-input latin-only">
+<small class="latin-warning">
+ יש למלא את שם המשפחה באותיות אנגליות בלבד (A-Z)
+</small>
 
 <h2>מנות עיקריות</h2>
 
@@ -377,8 +395,8 @@ checkShabat();
     <label><input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי</label>
     <label><input type="checkbox" class="topping" data-name="כרוב לבן" data-price="0"> כרוב לבן</label>
     <label><input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול</label>
+    <label><input type="checkbox" class="topping" data-name="חריף בצד" data-price="0"> חריף בצד</label>
     <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
-        <label><input type="checkbox" class="topping" data-name="חריף בצד" data-price="0"> חריף בצד</label>
   </div>
   <button onclick="addToCart(this, 60, 'שניצל בבגט')">הוסף לעגלה</button>
   <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח/י להוסיף לעגלה</p>
@@ -393,8 +411,8 @@ checkShabat();
     <label><input type="checkbox" class="topping" data-name="סלט ישראלי" data-price="0"> סלט ישראלי</label>
     <label><input type="checkbox" class="topping" data-name="כרוב לבן" data-price="0"> כרוב לבן</label>
     <label><input type="checkbox" class="topping" data-name="כרוב סגול" data-price="0"> כרוב סגול</label>
+    <label><input type="checkbox" class="topping" data-name="חריף בצד" data-price="0"> חריף בצד</label>
     <label><input type="checkbox" class="topping" data-name="צ’יפס בצד" data-price="7"> צ’יפס בצד (+7₪)</label>
-        <label><input type="checkbox" class="topping" data-name="חריף בצד" data-price="0"> חריף בצד</label>
   </div>
   <button onclick="addToCart(this, 60, 'שווארמה בבגט')">הוסף לעגלה</button>
   <p style="color:red; font-weight:bold; margin-top:5px;">אל תשכח/י להוסיף לעגלה</p>
@@ -674,6 +692,13 @@ function updateWhatsAppLink(name, surname) {
 
   document.getElementById("whatsappKitchen").href = url;
 }
+
+document.querySelectorAll('.latin-only').forEach(input => {
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+  });
+});
+
 </script>
 
 </body>
