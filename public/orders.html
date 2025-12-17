@@ -334,33 +334,37 @@ function printOrder(idx){
         return;
       }
 
+      const line = "------------------------\n";
       let text = "";
+
       text += "******** COZINHA ********\n";
       text += `CLIENTE: ${order.name} ${order.surname}\n`;
       text += `HORA: ${order.time ? new Date(order.time).toLocaleTimeString() : "-"}\n`;
-      text += "------------------------\n";
+      text += line;
       text += "ITENS:\n";
+      text += line;
 
       order.items.forEach((item, i) => {
         text += `${i + 1}. ${item.name}\n`;
         if(item.toppings?.length){
           text += `   + ${item.toppings.join(", ")}\n`;
         }
+        text += line;
       });
 
       if(order.drinks.length){
-        text += "------------------------\n";
-        text += "BEBIDAS:\n";
+        text += "EXTRAS:\n";
+        text += line;
         order.drinks.forEach(d => {
           if(d.type === "qty"){
             text += `- ${d.name} x${d.qty}\n`;
           } else {
             text += `- ${d.name}\n`;
           }
+          text += line;
         });
       }
 
-      text += "------------------------\n";
       text += `TOTAL: ₪${order.total}\n`;
       text += "************************\n";
 

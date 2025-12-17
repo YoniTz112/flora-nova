@@ -17,6 +17,7 @@ const translateMap = {
   "תוספת קציצה": "Mais uma carne",
 
   // bebidas
+  "צ’יפס": "Batata frita",
   "קוקה קולה": "Coca",
   "קולה זירו": "Coca Zero",
   "מים": "Água",
