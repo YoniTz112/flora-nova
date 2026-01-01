@@ -27,8 +27,10 @@ const translateMap = {
   // shabat
   "חלה לשבת": "Chalá de Shabat",
   "בקבוק יין (מיץ ענבים)": "Suco de uva",
-  "קופסת מטבוחה (250גר)": "Matbucha 250g",
-  "קופסת חומוס (250גר)": "Hoummus 250g"
+  "קופסת מטבוחה (200גר)": "Matbucha 200g",
+  "קופסת חומוס (200גר)": "Hoummus 200g",
+  "קופסת טחינה (200גר)": "Tahini 200g",
+  "ערכה לשבת": "Kit de Shabat"
 };
 
 function translate(text) {
